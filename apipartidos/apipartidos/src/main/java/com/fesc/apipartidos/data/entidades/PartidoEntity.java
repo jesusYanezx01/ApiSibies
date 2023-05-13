@@ -36,7 +36,7 @@ public class PartidoEntity implements Serializable  {
     private Date fecha; //Date del java.util
 
     @Column(nullable = false)
-    private String golesLoscal;
+    private String golesLocal;
 
     @Column(nullable = false)
     private String golesVisitante;
@@ -81,12 +81,12 @@ public class PartidoEntity implements Serializable  {
         this.fecha = fecha;
     }
 
-    public String getGolesLoscal() {
-        return this.golesLoscal;
+    public String getGolesLocal() {
+        return this.golesLocal;
     }
 
-    public void setGolesLoscal(String golesLoscal) {
-        this.golesLoscal = golesLoscal;
+    public void setGolesLocal(String golesLocal) {
+        this.golesLocal = golesLocal;
     }
 
     public String getGolesVisitante() {

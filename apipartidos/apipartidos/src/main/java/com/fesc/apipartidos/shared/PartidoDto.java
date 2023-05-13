@@ -17,7 +17,7 @@ public class PartidoDto implements Serializable {
     private long equipoLocal;
     private long equipoVisitante;
     private UsuarioDto usuarioEntity; 
-    private String golesLoscal;
+    private String golesLocal;
     private String golesVisitante;
     private EquipoDto equipoEntityLocal;
     private EquipoDto equipoEntityVisitante;
@@ -87,12 +87,12 @@ public class PartidoDto implements Serializable {
         this.usuarioEntity = usuarioEntity;
     }
 
-    public String getGolesLoscal() {
-        return this.golesLoscal;
+    public String getGolesLocal() {
+        return this.golesLocal;
     }
 
-    public void setGolesLoscal(String golesLoscal) {
-        this.golesLoscal = golesLoscal;
+    public void setGolesLocal(String golesLocal) {
+        this.golesLocal = golesLocal;
     }
 
     public String getGolesVisitante() {

@@ -1,5 +1,7 @@
 package com.fesc.apipartidos.Services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
@@ -41,7 +43,7 @@ public class PartidoService implements IPartidoService {
         PartidoEntity partidoEntity = new PartidoEntity();
         partidoEntity.setIdPartido(UUID.randomUUID().toString());
         partidoEntity.setFecha(partidoCrearDto.getFecha());
-        partidoEntity.setGolesLoscal("0");
+        partidoEntity.setGolesLocal("0");
         partidoEntity.setGolesVisitante("0");
         partidoEntity.setUsuarioEntity(usuarioEntity);
         partidoEntity.setEquipoEntityLocal(equipoEntityLocal);
@@ -56,6 +58,72 @@ public class PartidoService implements IPartidoService {
 
 
         return partidoDto;
+    }
+
+    @Override
+    public List<PartidoDto> partidosCreados() {
+        
+        
+        List<PartidoEntity> partidoEntityList= iPartidoRespositoy.partidosCreados(); 
+
+        //instanciamos una arrayList
+        List<PartidoDto> partidoDtoList = new ArrayList<>(); 
+
+        for (PartidoEntity partidoEntity : partidoEntityList) {
+            PartidoDto partidoDto = modelMapper.map(partidoEntity, PartidoDto.class);
+            partidoDtoList.add(partidoDto);
+            
+        }
+
+        return partidoDtoList; 
+    }
+
+    @Override
+    public PartidoDto detallePartido(String id) {
+
+        PartidoEntity partidoEntity = iPartidoRespositoy.findByIdPartido(id); 
+
+        PartidoDto partidoDto = modelMapper.map(partidoEntity, PartidoDto.class);
+
+
+        return partidoDto;
+    }
+
+    @Override
+    public PartidoDto actualizarPartido(String idpartido, PartidoDto partidoActualizarDto) {
+
+        PartidoEntity partidoEntity= iPartidoRespositoy.findByIdPartido(idpartido);
+
+        UsuarioEntity usuarioEntity= iusuarioRepository.findByUsername(partidoActualizarDto.getUsername());
+
+        if(partidoEntity.getUsuarioEntity().getId() != usuarioEntity.getId()){
+            throw new RuntimeException( "No tienes permisos para actualizar este partido");
+        }
+
+        //solo actualizara los goles
+        //en caso de querer actualizar otra cosa, se puede setear llamando el atributo a actualizar
+        partidoEntity.setGolesLocal(partidoActualizarDto.getGolesLocal());
+        partidoEntity.setGolesVisitante(partidoActualizarDto.getGolesVisitante());
+
+        PartidoEntity partidoEntityActualizado= iPartidoRespositoy.save(partidoEntity);
+
+        PartidoDto partidoDto= modelMapper.map(partidoEntityActualizado,PartidoDto.class);
+
+        return partidoDto; 
+    }
+
+    @Override
+    public void eliminarPartido(String idPartido, long idUsuario) {
+
+        PartidoEntity partidoEntity= iPartidoRespositoy.findByIdPartido(idPartido);
+
+        if(partidoEntity.getUsuarioEntity().getId() != idUsuario){
+            throw new RuntimeException( "No tienes permisos para eliminar este partido");
+        }
+
+        iPartidoRespositoy.delete(partidoEntity);
+
+        
     }
     
 }

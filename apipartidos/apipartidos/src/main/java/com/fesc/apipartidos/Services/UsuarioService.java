@@ -1,5 +1,7 @@
 package com.fesc.apipartidos.Services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
@@ -8,8 +10,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fesc.apipartidos.data.entidades.PartidoEntity;
 import com.fesc.apipartidos.data.entidades.UsuarioEntity;
+import com.fesc.apipartidos.data.repositorios.IPartidoRespositoy;
 import com.fesc.apipartidos.data.repositorios.IUsuarioRepository;
+import com.fesc.apipartidos.shared.PartidoDto;
 import com.fesc.apipartidos.shared.UsuarioDto;
 
 @Service //Anotacion para especificar que la clase es un servicio 
@@ -24,6 +29,9 @@ public class UsuarioService implements IUsuarioService {
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    IPartidoRespositoy iPartidoRespositoy; 
 
     @Override
     public UsuarioDto crearUsuario(UsuarioDto usuarioCrearDto) {
@@ -63,6 +71,31 @@ public class UsuarioService implements IUsuarioService {
 
         return usuarioDto;
 
+    }
+
+    @Override
+    public List<PartidoDto> leerMispartidos(String username) {
+        UsuarioEntity usuarioEntity = iusuariorepository.findByUsername(username);
+
+        //lista de todos los partidos que trajo la consulta
+        List<PartidoEntity> partidoEntityList= iPartidoRespositoy.getByUsuarioEntityIdOrderByCreadoDesc(usuarioEntity.getId()); 
+
+        //tenemos que mapear porque tenemos que retornar en dto
+        //creamos un objeto array 
+        //List padre de ArrayList, llamamos la clase list, pero instanciamos el hijo (arrayList) 
+        //Si ponemos ArrayList fijo se quedara estatico y no se podra convertir
+        List<PartidoDto> partidoDtoList= new ArrayList<>();
+
+        //Utilizamos el for each por lo que trabajaremos con una lista
+        
+        for(PartidoEntity partidoEntity : partidoEntityList){
+           //cada valor que es recorrido y almacenado en partidoEntity  lo estamos mapeando a partidoDto
+            PartidoDto partidoDto = modelMapper.map(partidoEntity, PartidoDto.class);
+           //seguidamente se va añadiendo a partidoDtoList
+            partidoDtoList.add(partidoDto);
+
+        }
+        return partidoDtoList; 
     }
 
     
