@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +37,11 @@ public class UsuarioController {
     @GetMapping
     public UsuarioDataRestModel leerUsuario(){
 
-        String username = "rortegani";
+        //debe a ver una validacion de login para leer mis partidos
+        //String username = "rortegani";
+        Authentication authentication=  SecurityContextHolder.getContext().getAuthentication();
+
+        String username= authentication.getPrincipal().toString();
         UsuarioDto usuarioDto = iusuarioservice.leerUsuario(username);
 
         UsuarioDataRestModel usuarioDataRestModel = modelMapper.map(usuarioDto, UsuarioDataRestModel.class);
@@ -64,7 +70,10 @@ public class UsuarioController {
     @GetMapping(path = "/mispartidos")
     public List<PartidoDataRestModel> leerMispartidos() {
         //debe a ver una validacion de login para leer mis partidos
-        String username = "rortegani";
+        //String username = "rortegani";
+        Authentication authentication=  SecurityContextHolder.getContext().getAuthentication();
+
+        String username= authentication.getPrincipal().toString();
 
         //llamamos el metodo leerMispartidos de la interfaz del servicio usuario 
         //Este metodo nos traera una lista partidoDto 

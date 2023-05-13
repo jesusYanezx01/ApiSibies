@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -96,6 +98,28 @@ public class UsuarioService implements IUsuarioService {
 
         }
         return partidoDtoList; 
+    }
+
+    // Para usar este metodo tuvimos que extender en la interfaz de usuario servicio UserDetailsService
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        //buscamos el username del usuario
+        UsuarioEntity usuarioEntity= iusuariorepository.findByUsername(username);
+
+
+        //validamos si el username requerido, existe
+        if(username == null){
+            //si el username es nulo, aplicamos una excepcion 
+            throw new UsernameNotFoundException(username);
+        }
+
+
+        //creamos el usuario con la informacion de la base de datos (username, contraseña encriptada y requiere una arraylist para almacenar los resultados)
+        User usuario= new User(usuarioEntity.getUsername(), usuarioEntity.getPasswordEncripatada(), new ArrayList<>()); 
+        
+        //retorna el usuario
+        return usuario; 
     }
 
     
