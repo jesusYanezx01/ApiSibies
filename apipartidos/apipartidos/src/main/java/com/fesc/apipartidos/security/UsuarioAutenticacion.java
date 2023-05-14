@@ -18,7 +18,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fesc.apipartidos.Services.IUsuarioService;
 import com.fesc.apipartidos.models.peticiones.UsuarioSingupRequestModel;
+import com.fesc.apipartidos.shared.UsuarioDto;
+import com.fesc.apipartidos.utils.AppContexto;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -26,6 +29,8 @@ import io.jsonwebtoken.security.Keys;
 
 //Esta clase es para generar el token de cada usuario que inicie sesion en mi login 
 public class UsuarioAutenticacion extends UsernamePasswordAuthenticationFilter {
+
+    
 
     private final AuthenticationManager authenticationManager; 
 
@@ -77,6 +82,11 @@ public class UsuarioAutenticacion extends UsernamePasswordAuthenticationFilter {
                 .signWith(key)
                 .compact(); 
 
+                IUsuarioService iUsuarioService= (IUsuarioService) AppContexto.getBean("usuarioService");
+                UsuarioDto usuarioDto= iUsuarioService.leerUsuario(username);
+
+                response.addHeader("Access-Control-Exponse-Headers", "Authorization. IdUsuario");
+                response.addHeader("IdUsuario", usuarioDto.getIdUsuario());
                 response.addHeader(ConstantesSecurity.HEADER_STRING, ConstantesSecurity.TOKEN_PREFIJO + token);
 
                 //Recordar siempre añadir  a la configuracion de seguridad los filtros creados 

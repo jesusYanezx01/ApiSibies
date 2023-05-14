@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.fesc.apipartidos.utils.AppContexto;
+
 
 
 // @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
@@ -40,6 +42,12 @@ public class ApipartidosApplication {
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder(){ //metodo para la codificacion de la clave encriptada
 		return new BCryptPasswordEncoder();
+	}
+
+	//no olvidemos llamar AppContexto para utilizarlo en todas nuestras clases
+	@Bean
+	public AppContexto appContexto(){
+		return new AppContexto();
 	}
 
 }
