@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.fesc.sibies.utils.AppContexto;
 
 
 
@@ -42,9 +41,6 @@ public class ApisibiesApplication {
 		return new BCryptPasswordEncoder();
 	}
 
-	@Bean
-	public AppContexto appContexto(){
-		return new AppContexto();
-	}
+	
 
 }
